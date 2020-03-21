@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o deployment.yml
+    kompose.version: 1.20.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: crawler-book-douban
+  name: crawler-book-douban
+  namespace: crawler
+spec:
+  replicas: 5
+  revisionHistoryLimit: 1
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o deployment.yml
+        kompose.version: 1.20.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: crawler-book-douban
+    spec:
+      containers:
+        - args:
+            - python3
+            - run.py
+          env:
+            - name: PGSQL_DATABASE
+              value: scrape_book
+            - name: PGSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql
+                  key: host
+            - name: PGSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql
+                  key: password
+            - name: PGSQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql
+                  key: port
+            - name: PGSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pgsql
+                  key: user
+            - name: REDIS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: connection_string
+            - name: PROXYPOOL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: proxypool
+                  key: univeral
+            - name: PROXYTUNNEL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: proxytunnel
+                  key: value
+          image: germey/crawler-book-douban:${TAG}
+          name: crawler-book-douban
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: "150m"
+            requests:
+              memory: "200Mi"
+              cpu: "150m"
+      restartPolicy: Always
+status: {}
