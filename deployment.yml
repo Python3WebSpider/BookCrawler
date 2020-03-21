@@ -58,13 +58,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: proxypool
-                  key: univeral
+                  key: universal
             - name: PROXYTUNNEL_URL
               valueFrom:
                 secretKeyRef:
                   name: proxytunnel
                   key: value
-          image: germey/crawler-book-douban:${TAG}
+          image: germey/crawler-book-douban
           name: crawler-book-douban
           resources:
             limits:
