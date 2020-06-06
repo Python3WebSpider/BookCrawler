@@ -1,5 +1,5 @@
 scrapy==1.6.0
-Django==2.2.10
+Django==2.2.13
 django-cors-headers==3.2.0
 djangorestframework==3.11.0
 requests==2.22.0
